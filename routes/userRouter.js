@@ -5,7 +5,8 @@ import { createUser, loginUser } from "../controllers/userController.js"
 const userRouter = express.Router()
 
 userRouter.post("/",createUser)
-userRouter.get("/",loginUser)
+
+userRouter.post("/login",loginUser)
 
 
 

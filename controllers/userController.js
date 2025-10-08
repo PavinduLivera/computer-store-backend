@@ -7,8 +7,6 @@ export function createUser(req, res){
     const data = req.body
     const hashedPassword = bcrypt.hashSync(data.password, 10)
 
-    res.json({ hashedPassword })
-
     // const user = new User(req.body)
     const user = new User({
         email : data.email,

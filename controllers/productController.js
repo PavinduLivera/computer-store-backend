@@ -57,3 +57,72 @@ export function getAllProducts(req, res) {
             });
     }
 }
+
+export function deleteProduct(req,res) {
+    if(!isAdmin(req)){
+        res.status(403).json({
+            message : "Only admin can delete products"
+        })
+        return
+    }
+
+    const productID = req.params.productID
+
+    Product.deleteOne({productID : productID}).then(
+        ()=>{
+            res.json({
+                message : "Product deleted successfully"
+            })
+        }
+    )
+}
+
+export function updateProduct(req,res){
+    if(!isAdmin(req)){
+        res.status(403).json({
+            message : "Only admin can update products"
+        })
+        return
+    }
+
+    const productID = req.params.productID
+
+    Product.updateOne({productID : productID}, req.body).then(
+        ()=>{
+            res.json({
+                message : "Product updated successfully"
+            })
+        }
+    )
+}
+
+export function getProductByID(req,res){
+    const productID = req.params.productID
+
+    Product.findOne({productID : productID}).then(
+        (product)=>{
+            if(product == null){
+                res.status(404).json({
+                    message : "Product not found"
+                })
+            }
+            else{
+                // res.json(product)
+                if(product.isAvailable){
+                    res.json(product)
+                }else{
+                    res.status(404).json({
+                        message : "Product not found"
+                    })
+                }
+            }
+        }
+    ).catch(
+        (error)=>{
+            res.status(500).json({
+                message : "Error fetching product",
+                error : error.message
+            })
+        }
+    )
+}
