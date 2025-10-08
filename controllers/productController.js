@@ -1,18 +1,13 @@
 import Product from "../models/Product.js";
+import { isAdmin } from "./userController.js";
 
 export function createProduct(req,res){
-    if(req.user == null) {
-        res.status(401).json({
-            message : "Unauthorized"
-    })
-    return
 
-    }
-    if(req.user.role != "admin"){
+    if (! isAdmin(req)) {
         res.status(403).json({
-            message : "Forbidden"
-        })
-        return
+            message: "Forbidden",
+        });
+        return;
     }
 
     const product = new Product(req.body)
@@ -28,7 +23,37 @@ export function createProduct(req,res){
             res.status(500).json({
                 message : "Error creating product",
                 error : error.message
+            });
+        });
+}
+
+export function getAllProducts(req, res) {
+
+    if(isAdmin(req)){
+
+        Product.find().then(
+            (products)=>{
+                res.json(products)
+            }
+        ).catch(
+            (error)=>{
+                res.status(500).json({
+                    message : "Error fetching products",
+                    error : error.message
+                })
+            }
+        )
+    }else{
+
+        Product.find({isAvailable : true}).then(
+            (products)=>{
+                res.json(products)
             })
-        }
-    )
+            .catch((error) => {
+                res.status(500).json({
+                    message: "Error fetching products",
+                    error : error.message
+                });
+            });
+    }
 }

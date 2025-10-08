@@ -1,6 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import userRouter from "./routes/userRouter.js"
+import productRouter from "./routes/productRouter.js"
 
 const mongoURI = "mongodb+srv://admin:1234@cluster0.3nq8bbi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -58,6 +59,7 @@ app.use(
 )
   
 app.use("/users", userRouter)
+app.use("/products",productRouter)
 
 app.listen(3000 ,
     ()=>{
