@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import dotenv from "dotenv";
+dotenv.config();
 
 export function createUser(req, res){
 
@@ -53,13 +55,14 @@ export function loginUser(req,res){
                         image: user.image
                     };
 
-                    const token = jwt.sign(payload, "secretKey96$2025",{
+                    const token = jwt.sign(payload, process.env.JWT_SECRET,{
                         expiresIn: "150h"
                     })
 
                     res.json({
                     message : "Login successful",
-                    token: token
+                    token: token,
+                    role: user.role,
                 });
                 } else{
                     res.status(404).json({
